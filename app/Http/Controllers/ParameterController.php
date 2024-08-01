@@ -18,9 +18,12 @@ class ParameterController extends Controller
                 ->orWhere('title', 'like', '%' . $request->search . '%');
         }
 
-        $parameters = $query->where('type', 2)->get();
+        $sortField = $request->get('sort_field', 'id');  // Поле для сортировки, по умолчанию 'id'
+        $sortOrder = $request->get('sort_order', 'asc'); // Порядок сортировки, по умолчанию 'asc'
 
-        return view('parameters.index', compact('parameters'));
+        $parameters = $query->orderBy($sortField, $sortOrder)->get();
+
+        return view('parameters.index', compact('parameters', 'sortField', 'sortOrder'));
     }
 
     public function uploadImages(Request $request, $id)
@@ -72,25 +75,5 @@ class ParameterController extends Controller
         return redirect()->back()->with('success', 'Image deleted successfully.');
     }
 
-    public function apiGetParameters()
-    {
-        $parameters = Parameter::where('type', 2)->get()->map(function ($parameter) {
-            return [
-                'id' => $parameter->id,
-                'title' => $parameter->title,
-                'icon' => $parameter->icon ? [
-                    'name' => basename($parameter->icon),
-                    'path' => asset('storage/' . $parameter->icon),
-                    'type' => 'icon'
-                ] : null,
-                'icon_gray' => $parameter->icon_gray ? [
-                    'name' => basename($parameter->icon_gray),
-                    'path' => asset('storage/' . $parameter->icon_gray),
-                    'type' => 'icon_gray'
-                ] : null,
-            ];
-        });
 
-        return response()->json($parameters);
-    }
 }
