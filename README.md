@@ -16,6 +16,6 @@
 ```make seed```
 
 Чтобы получить удаленный доступ к моему веб-серверу:
-https://71f4-5-228-113-89.ngrok-free.app/parameters
+https://71f4-5-228-113-89.ngrok-free.app
 
 
